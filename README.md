@@ -1,5 +1,7 @@
 # ocp-example-node-app
 
+> This is the open source version of ocp-example-node-app.
+
 This is a simple Hello World app which uses Node.js.
 
 It is supposed to be deployed on the OpenShift container platform.
