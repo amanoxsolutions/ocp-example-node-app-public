@@ -1,0 +1,36 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: example-app
+spec:
+  params:
+  - name: imageTag
+    description: The git reference either tag/branch name or commit hash
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1
+    kind: PipelineRun
+    metadata:
+      generateName: build-pipeline-run-
+    spec:
+      pipelineRef:
+        name: build-pipeline
+      params:
+      - name: GIT_REVISION
+        value: main
+      - name: APP_NAME
+        value: example-app
+      workspaces:
+      - name: repo
+        volumeClaimTemplate:
+          metadata:
+            labels:
+              tekton.dev/pipeline: build-pipeline
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+      - name: git-credentials
+        secret:
+          secretName: build-pipeline-git-credentials

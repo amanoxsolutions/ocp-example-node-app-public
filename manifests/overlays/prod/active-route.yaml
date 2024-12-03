@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ocp-example-node-app-active
+spec:
+  to:
+    kind: Service
+    name: example-app
+  port:
+    targetPort: https
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

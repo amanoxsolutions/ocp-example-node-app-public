@@ -1,0 +1,31 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: Trigger
+metadata:
+  name: push-trigger
+spec:
+  serviceAccountName: pipeline
+  interceptors:
+  - ref:
+      name: "github"
+    params:
+    - name: "secretRef"
+      value:
+        secretName: trigger-secret
+        secretKey: secretToken
+    - name: "eventTypes"
+      value:
+      - "push"
+  - ref:
+      name: "cel"
+      kind: ClusterInterceptor
+    params:
+    - name: "filter"
+      value: "body.head_commit.message.contains('[PIPELINE TAG UPDATE]') == false"
+    - name: "overlays"
+      value:
+      - key: imageTag
+        expression: "body.ref.startsWith('refs/tags/') ? body.ref.split('/')[2] : body.head_commit.id"
+  bindings:
+  - ref: github-push-binding
+  template:
+    ref: example-app

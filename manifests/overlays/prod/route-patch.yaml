@@ -1,0 +1,6 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: example-app
+spec:
+  subdomain: example-node-app-prod

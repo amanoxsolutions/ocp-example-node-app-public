@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: example-app-trigger
+spec:
+  subdomain: example-node-app-trigger
+  to:
+    kind: Service
+    name: el-example-app # Points to service created by example-app EventListener
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
